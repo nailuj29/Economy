@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Economy.ItemsDashboard.Models.Item>
+
+<h1>Economy Bot Items</h1>
+
+@foreach (var item in Model) {
+    <div class="item">
+        <img src="https://cdn.discordapp.com/emojis/@(item.EmoteId).png" />
+             
+        <h2>@item.Name</h2>
+        <p>@item.Description</p>
+        <p>Buy - @item.BuyPrice Coins; Sell - @item.SellPrice Coins;</p>
+        
+        <a asp-action="Edit" asp-route-id="@item.Id">edit</a>
+        <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
+    </div>
+    <hr />
+}
+
+<a class="create" asp-action="Create">Add New Item</a>

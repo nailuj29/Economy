@@ -1,0 +1,23 @@
+﻿@model Economy.ItemsDashboard.Models.Item
+
+<form asp-action="Create" method="post">
+    <fieldset class="item-form">
+        <h2>Submit an Item</h2>
+        <label for="Name">Name</label>
+        <input type="text" id="Name" asp-for="Name">
+        <br>
+        <label for="Description">Description</label>
+        <textarea id="Description" asp-for="Description"></textarea>
+        <br>
+        <label for="Emote">Emote ID</label>
+        <input type="text" id="Emote" asp-for="EmoteId">
+        <br>
+        <label for="Buy">Buy Price</label>
+        <input type="number" id="Buy" asp-for="BuyPrice">
+        <br>
+        <label for="Sell">Sell Price</label>
+        <input type="number" id="Sell" asp-for="SellPrice">
+        <br>
+        <input type="submit" name="Create" content="Create" />
+    </fieldset>
+</form>
