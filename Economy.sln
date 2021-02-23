@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Economy", "Economy\Economy.csproj", "{DE8FB80B-DE94-424B-9925-5CD93D694BE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Economy.ItemsDashboard", "Economy.ItemsDashboard\Economy.ItemsDashboard.csproj", "{CA6DF673-AB9E-4C35-8AD1-E68D90F232D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{DE8FB80B-DE94-424B-9925-5CD93D694BE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE8FB80B-DE94-424B-9925-5CD93D694BE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE8FB80B-DE94-424B-9925-5CD93D694BE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA6DF673-AB9E-4C35-8AD1-E68D90F232D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA6DF673-AB9E-4C35-8AD1-E68D90F232D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA6DF673-AB9E-4C35-8AD1-E68D90F232D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA6DF673-AB9E-4C35-8AD1-E68D90F232D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
