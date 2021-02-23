@@ -27,13 +27,13 @@ namespace Economy {
             return user;
         }
 
-        public async void Update(string mongoId, User user) =>
+        public async Task Update(string mongoId, User user) =>
             await users.ReplaceOneAsync(oldUser => oldUser.Id == mongoId, user);
         
-        public async void Delete(string mongoId) =>
+        public async Task Delete(string mongoId) =>
             await users.DeleteOneAsync(oldUser => oldUser.Id == mongoId);
         
-        public async void Delete(User user) =>
+        public async Task Delete(User user) =>
             await users.DeleteOneAsync(oldUser => oldUser.Id == user.Id);
     }
 }
