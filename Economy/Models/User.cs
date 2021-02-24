@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -7,6 +8,7 @@ namespace Economy.Models {
         public User(string id) {
             DiscordId = id;
             Coins = 0;
+            Items = new List<Item>();
         }
         
         [BsonId]
@@ -16,5 +18,7 @@ namespace Economy.Models {
         public string DiscordId { get; set; }
         
         public long Coins { get; set; }
+        
+        public List<Item> Items { get; set; }
     }
 }

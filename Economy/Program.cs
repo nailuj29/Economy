@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Interactivity.Extensions;
 
 namespace Economy {
     class Program {
@@ -14,6 +15,7 @@ namespace Economy {
             var commands = discord.UseCommandsNext(new CommandsNextConfiguration() {
                 StringPrefixes = new [] { "!", "eco!" }
             });
+            discord.UseInteractivity();
             commands.RegisterCommands<EconomyCommands>();
             await discord.ConnectAsync();
             await Task.Delay(-1);

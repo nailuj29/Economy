@@ -37,7 +37,7 @@ namespace Economy.ItemsDashboard.Controllers {
                 return RedirectToAction("Index");
             }
 
-            return View("Submission");
+            return View("Edit");
         }
 
         [HttpGet]
