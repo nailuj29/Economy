@@ -22,19 +22,17 @@ namespace Economy {
 
             return await _helper.GetUser(id);
         }
-
-        [Command("money")]
-        [Description("Prints the amount of money you have")]
-        public async Task MoneyCommand(CommandContext ctx) {
-            await ctx.RespondAsync($"You have {(await GetOrCreateUser(ctx.User.Id.ToString())).Coins} coins");
-        }
         
         [Command("money")]
         [Description("Prints the amount of money someone has, defaults to how much you have")]
         public async Task MoneyCommand(CommandContext ctx,
-            [Description("The person to get the amount of money from")] DiscordUser user) {
-            var name = (await ctx.Guild.GetMemberAsync(user.Id)).DisplayName;
-            await ctx.RespondAsync($"{name} has {(await GetOrCreateUser(user.Id.ToString())).Coins} coins");
+            [Description("The person to get the amount of money from")] DiscordMember user = null) {
+            user ??= ctx.Member;
+            var name = user.DisplayName;
+            if (user == ctx.Member) {
+                name = "You";
+            }
+            await ctx.RespondAsync($"{name} ha{(name == "You" ? "ve" : "s")} {(await GetOrCreateUser(user.Id.ToString())).Coins} coins");
         }
 
 
