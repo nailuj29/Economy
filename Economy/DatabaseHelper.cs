@@ -49,8 +49,8 @@ namespace Economy {
         public async Task<Item> GetItem(string id) =>
             await _items.Find(item => item.Id == id).SingleOrDefaultAsync();
 
-        public async Task<Item> SearchItems(string query) =>
-            await _items.Find(item => item.Name.Contains(query)).SingleOrDefaultAsync();
+        public async Task<List<Item>> GetItems(string query) =>
+            await _items.Find(item => item.Name.ToLower().Contains(query.ToLower())).ToListAsync();
 
         public async Task UpdateItem(Item item) =>
             await _items.ReplaceOneAsync(old => old.Id == item.Id, item);

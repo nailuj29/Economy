@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -27,6 +28,15 @@ namespace Economy {
         public async Task MoneyCommand(CommandContext ctx) {
             await ctx.RespondAsync($"You have {(await GetOrCreateUser(ctx.User.Id.ToString())).Coins} coins");
         }
+        
+        [Command("money")]
+        [Description("Prints the amount of money someone has, defaults to how much you have")]
+        public async Task MoneyCommand(CommandContext ctx,
+            [Description("The person to get the amount of money from")] DiscordUser user) {
+            var name = (await ctx.Guild.GetMemberAsync(user.Id)).DisplayName;
+            await ctx.RespondAsync($"{name} has {(await GetOrCreateUser(user.Id.ToString())).Coins} coins");
+        }
+
 
         [Command("give")]
         [Description("Gives someone money")]
@@ -63,9 +73,11 @@ namespace Economy {
 
 
         [Command("shop")]
-        public async Task ShopCommand(CommandContext ctx) {
+        [Description("browse the shop for items")]
+        public async Task ShopCommand(CommandContext ctx,
+            [Description("The query to search for")] string query = "") {
             Console.WriteLine("Shop command run");
-            var items = await _helper.GetItems();
+            var items = await _helper.GetItems(query);
             var pages = new List<Page>();
             if (items is null || items.Count == 0) {
                 await ctx.RespondAsync("The shop could not be loaded.");
@@ -83,6 +95,43 @@ namespace Economy {
             }
 
             await ctx.Channel.SendPaginatedMessageAsync(ctx.Member, pages);
+        }
+        
+        
+        [Command("buy")]
+        [Description("Buys an item from the shop. The query must match only one item.")]
+        public async Task BuyCommand(CommandContext ctx,
+            [Description("The item to buy from the shop")] string item,
+            [Description("The number of items to buy")] int count = 1) {    
+            var user = await GetOrCreateUser(ctx.User.Id.ToString());
+            var itemsMatched = await _helper.GetItems(item);
+            if (itemsMatched.Count == 0) {
+                await ctx.RespondAsync("Could not find that item");
+                return;
+            } else if (itemsMatched.Count > 1) {
+                await ctx.RespondAsync(
+                    "That search would give you more that one item, I don't know which to give you!");
+                return;
+            }
+
+            var itemToBuy = itemsMatched[0];
+            if (user.Coins < itemToBuy.BuyPrice * count) {
+                await ctx.RespondAsync("You don't have enough money to buy those");
+                return;
+            }
+
+            user.Coins -= itemToBuy.BuyPrice * count;
+            user.Items ??= new List<ItemRef>();
+
+            foreach (var userItem in user.Items) {
+                if (userItem.Ref.Id.Equals(itemToBuy.Id)) {
+                    userItem.Count += count;
+                    break;
+                }
+            }
+
+            await _helper.UpdateUser(user.Id, user);
+            await ctx.RespondAsync($"You bought {count} {itemToBuy.Name}");
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Economy.Models {
         public User(string id) {
             DiscordId = id;
             Coins = 0;
-            Items = new List<Item>();
+            Items = new List<ItemRef>();
         }
         
         [BsonId]
@@ -19,6 +19,6 @@ namespace Economy.Models {
         
         public long Coins { get; set; }
         
-        public List<Item> Items { get; set; }
+        public List<ItemRef> Items { get; set; }
     }
 }
