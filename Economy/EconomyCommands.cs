@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
+using System.Text;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -130,6 +130,60 @@ namespace Economy {
 
             await _helper.UpdateUser(user.Id, user);
             await ctx.RespondAsync($"You bought {count} {itemToBuy.Name}");
+        }
+
+        [Command("sell")]
+        [Description("Sells. The query must match only one item.")]
+        public async Task SellCommand(CommandContext ctx,
+            [Description("The item to sell")] string item,
+            [Description("The number of items to sell")] int count = 1) {    
+            var user = await GetOrCreateUser(ctx.User.Id.ToString());
+            var itemsMatched = await _helper.GetItems(item);
+            if (itemsMatched.Count == 0) {
+                await ctx.RespondAsync("Could not find that item");
+                return;
+            } else if (itemsMatched.Count > 1) {
+                await ctx.RespondAsync(
+                    "That search would give you more that one item, I don't know which to give you!");
+                return;
+            }
+
+            user.Items ??= new List<ItemRef>();
+            ItemRef itemSold = null;
+            foreach (var userItem in user.Items) {
+                if (userItem.Ref.Id.Equals(itemsMatched[0].Id)) {
+                    itemSold = userItem;
+                    break;
+                }
+            }
+
+            if (itemSold.Count < count) {
+                await ctx.RespondAsync("You dont have enough of that item to sell");
+                return;
+            }
+
+            itemSold.Count -= count;
+            user.Coins += itemsMatched[0].SellPrice * count;
+
+            await _helper.UpdateUser(user.Id, user);
+            await ctx.RespondAsync($"You sold {count} {(await _helper.GetItem(itemSold.Ref.Id.ToString())).Name}");
+        }
+
+        [Command("inv")]
+        [Description("Gets someone's inventory")]
+        public async Task InvCommand(CommandContext ctx,
+            [Description("The user to get the inventory of. Defaults to you")] DiscordMember member = null
+        ) {
+            member ??= ctx.Member;
+            StringBuilder builder = new StringBuilder($"{member.DisplayName}'s inventory:\n");
+            var user = await GetOrCreateUser(member.Id.ToString());
+            foreach (var itemRef in user.Items) {
+                var item = await _helper.GetItem(itemRef.Ref.Id.ToString());
+                var emoji = await ctx.Guild.GetEmojiAsync(UInt64.Parse(item.EmoteId));
+                builder.Append($"- {itemRef.Count} {emoji.ToString()} {item.Name}\n");
+            }
+
+            await ctx.RespondAsync(builder.ToString());
         }
     }
 }
